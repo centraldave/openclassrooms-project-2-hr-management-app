@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">Vitesse RH</string>
     <string name="default_message">Aucun candidat</string>
+    <string name="all_tab">Tous</string>
+    <string name="favorite_tab">Favoris</string>
 </resources>

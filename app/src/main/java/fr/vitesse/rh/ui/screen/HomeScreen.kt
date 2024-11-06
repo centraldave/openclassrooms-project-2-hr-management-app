@@ -1,8 +1,12 @@
 package fr.vitesse.rh.ui.screen
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import fr.vitesse.rh.R
 import fr.vitesse.rh.ui.theme.VitesseRHTheme
 import kotlinx.coroutines.delay
@@ -31,7 +36,33 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         LoadingScreen()
     } else {
         // Todo: Vérifier si le state est vide
-        DefaultMessage() // Todo: Si vide, le statuer
+        Tabs()
+//        DefaultMessage() // Todo: Si vide, le statuer
+    }
+}
+
+@Composable
+fun Tabs() {
+    val tabTitles = listOf(stringResource(R.string.all_tab), stringResource(R.string.favorite_tab))
+
+    var selectedTabIndex by remember { mutableStateOf(0) }
+
+    Column(modifier = Modifier.fillMaxSize().padding(top = 20.dp)) {
+        TabRow(selectedTabIndex = selectedTabIndex) {
+            tabTitles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = { Text(text = title) }
+                )
+            }
+        }
+
+        if (selectedTabIndex == 0) {
+//            Todo: Afficher Tous
+        } else {
+//            // Todo: Afficher Favoris
+        }
     }
 }
 
