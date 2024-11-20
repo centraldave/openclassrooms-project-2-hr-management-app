@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Vitesse RH</string>
-    <string name="default_message">No candidate</string>
+    <string name="no_favorite">No favorite candidate</string>
     <string name="all_tab">All</string>
     <string name="favorite_tab">Favorite</string>
+    <string name="profile_picture_description">Profile picture</string>
+    <string name="search_placeholder">Search candidates...</string>
+    <string name="no_data">No registered candidate</string>
+    <string name="logo_hr_description">Vitesse HR Logo</string>
+    <string name="loader_description">Loading candidates...</string>
 </resources>

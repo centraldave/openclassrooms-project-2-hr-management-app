@@ -13,7 +13,8 @@ private val LightColorScheme = lightColorScheme(
     onPrimaryContainer = MistyBlue,
     secondary = GoldenSand,
     onSecondary = White,
-    onSecondaryContainer = SunflowerGold
+    onSecondaryContainer = SunflowerGold,
+    onTertiary = Midnight
 )
 
 @Composable

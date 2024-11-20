@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vitesse RH</string>
+    <string name="no_favorite">Aucun candidat favori</string>
+    <string name="all_tab">Tous les candidats</string>
+    <string name="favorite_tab">Favoris</string>
+    <string name="profile_picture_description">Photo de profil</string>
+    <string name="search_placeholder">Rechercher un candidat...</string>
+    <string name="no_data">Aucun candidat enregistré</string>
+    <string name="logo_hr_description">Vitesse HR Logo</string>
+    <string name="loader_description">Chargement des candidats...</string>
+</resources>
