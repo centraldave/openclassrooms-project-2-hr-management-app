@@ -7,5 +7,6 @@ import fr.vitesse.rh.data.model.Candidate
 data class CandidateUiState(
     val isLoading: Boolean = true,
     val selectedTab: MutableState<Int> = mutableIntStateOf(0),
-    val candidateList: List<Candidate> = emptyList()
+    val candidateList: List<Candidate> = emptyList(),
+    val convertedUsdSalary: String? = null,
 )

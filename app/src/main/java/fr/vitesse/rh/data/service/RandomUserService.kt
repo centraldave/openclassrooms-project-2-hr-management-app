@@ -1,6 +1,7 @@
 package fr.vitesse.rh.data.service
 
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
+import fr.vitesse.rh.data.common.RandomUserApi
 import fr.vitesse.rh.data.common.RetrofitClient
 import fr.vitesse.rh.data.model.Candidate
 import fr.vitesse.rh.data.model.GenderEnum
@@ -11,12 +12,14 @@ import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
 
-class RandomService @Inject constructor() {
-    private val api = RetrofitClient.apiService
+class RandomUserService @Inject constructor() {
 
-    private suspend fun fetchRandomUsersApi(gender: String): Result<RandomUserResponse> {
+    private suspend fun fetchRandomUsersApi(url: String, gender: String): Result<RandomUserResponse> {
         return try {
-            val response = api.getRandomUsers(gender = gender)
+            val retrofit = RetrofitClient.createRetrofit(url)
+            val apiService = retrofit.create(RandomUserApi::class.java)
+
+            val response = apiService.getRandomUsers(url, gender = gender)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
@@ -28,7 +31,9 @@ class RandomService @Inject constructor() {
 
         repeat(count) {
             val gender: GenderEnum = GenderEnum.entries.random()
-            val response = fetchRandomUsersApi(gender.name.lowercase())
+            val url = "https://randomuser.me/api/"
+
+            val response = fetchRandomUsersApi(url = url, gender = gender.name.lowercase())
 
             response.onSuccess { userResponse ->
                 val user = userResponse.results.first()
@@ -41,7 +46,7 @@ class RandomService @Inject constructor() {
                         lastName = user.name.last,
                         profilePicture = null,
                         phoneNumber = getRandomPhoneNumber(),
-                        salary = getRandomSalary(30000.00, 120000.00),
+                        salaryExpectations = getRandomSalary(30000.00, 120000.00),
                         note = LoremIpsum(30).values.joinToString(" "),
                         isFavorite = Random.nextBoolean()
                     )
@@ -70,7 +75,7 @@ class RandomService @Inject constructor() {
     }
 
     private fun getRandomSalary(min: Double, max: Double): Double {
-
-        return Random.nextDouble(min, max)
+        val randomSalary = Random.nextDouble(min, max)
+        return "%.2f".format(randomSalary).toDouble()
     }
 }

@@ -11,7 +11,7 @@ sealed class Screen(
     data object Home : Screen("home")
 
     data object DetailCandidate : Screen(
-        route = "read/{candidateId}",
+        route = "candidateDetail/{candidateId}",
         navArguments = listOf(navArgument("candidateId") {
             type = NavType.StringType
         })

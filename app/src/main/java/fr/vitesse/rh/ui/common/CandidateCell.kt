@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import fr.vitesse.rh.R
 import fr.vitesse.rh.data.model.Candidate
 import fr.vitesse.rh.data.service.CandidateService
-import fr.vitesse.rh.data.service.RandomService
+import fr.vitesse.rh.data.service.RandomUserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -82,11 +82,11 @@ fun CandidateCell(
 @Preview(showBackground = true)
 @Composable
 fun CandidateCellPreview() {
-    val randomService = RandomService()
+    val randomUserService = RandomUserService()
     var randomCandidate: Candidate? = null
     LaunchedEffect(Unit) {
         launch(Dispatchers.IO) {
-            randomCandidate = randomService.generateCandidates(1).getOrNull()?.first()!!
+            randomCandidate = randomUserService.generateCandidates(1).getOrNull()?.first()!!
         }
     }
 

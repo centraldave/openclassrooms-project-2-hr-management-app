@@ -79,12 +79,14 @@ fun CandidateNavHost(
     modifier: Modifier,
     candidateService: CandidateService,
     navHostController: NavHostController,
-    candidateUiState: CandidateUiState
+    candidateUiState: CandidateUiState,
+    candidateViewModel: CandidateViewModel = hiltViewModel()
 ) {
     NavHost(
         navHostController,
         startDestination = Screen.Home.route
     ) {
+        // Home Screen
         composable(route = Screen.Home.route) {
             HomeScreen(
                 modifier = modifier,
@@ -110,18 +112,21 @@ fun CandidateNavHost(
         ) {
             val candidateId = it.arguments?.getString("candidateId") ?: return@composable
             val candidate = candidateUiState.candidateList.firstOrNull { it.id.toString() == candidateId }
-
-            CandidateScreen(
-                candidate = candidate,
-                onBackClick = { navHostController.navigateUp() },
-                onCreateUpdateClick = {
-                    navHostController.navigate(
-                        Screen.DetailCandidate.createRoute(
-                            candidateId = it.arguments?.getString("candidateId") ?: ""
+            if (candidate != null) {
+                CandidateScreen(
+                    candidate = candidate,
+                    candidateService = candidateService,
+                    candidateViewModel = candidateViewModel,
+                    onBackClick = { navHostController.navigateUp() },
+                    onCreateUpdateClick = {
+                        navHostController.navigate(
+                            Screen.CreateOrUpdateCandidate.createRoute(candidateId = candidate.id.toString())
                         )
-                    )
-                }
-            )
+                    }
+                )
+            } else {
+                Text(text = "Candidate not found", modifier = Modifier.padding(16.dp))
+            }
         }
     }
 }

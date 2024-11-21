@@ -8,4 +8,12 @@
     <string name="no_data">No registered candidate</string>
     <string name="logo_hr_description">Vitesse HR Logo</string>
     <string name="loader_description">Loading candidates...</string>
+    <string name="phone_description">Phone</string>
+    <string name="sms_description">SMS</string>
+    <string name="e_mail_description">E-Mail</string>
+    <string name="about_title">About Candidate</string>
+    <string name="about_description">Birthday</string>
+    <string name="birthdate_sufix">years old</string>
+    <string name="salary_expectations_title">Salary Expectations</string>
+    <string name="notes_title">Notes</string>
 </resources>

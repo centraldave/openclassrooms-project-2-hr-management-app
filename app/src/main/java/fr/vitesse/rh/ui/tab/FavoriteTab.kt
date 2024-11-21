@@ -38,7 +38,6 @@ fun FavoriteTab(
     }
 
     if (filteredFavoriteCandidates.isEmpty()) {
-        // Center the "No favorites" message
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
@@ -50,7 +49,6 @@ fun FavoriteTab(
             )
         }
     } else {
-        // Display filtered favorite candidates
         LazyColumn {
             items(filteredFavoriteCandidates) { candidate ->
                 CandidateCell(
