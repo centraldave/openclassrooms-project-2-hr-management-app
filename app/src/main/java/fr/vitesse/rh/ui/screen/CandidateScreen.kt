@@ -161,7 +161,8 @@ fun CandidateDetails(
                 painter = painterResource(id = candidateService.getProfilePicture(candidate)),
                 contentDescription = stringResource(R.string.profile_picture_description),
                 modifier = Modifier
-                    .size(150.dp),
+                    .height(175.dp)
+                    .fillMaxWidth(),
                 contentScale = ContentScale.Crop
             )
         }

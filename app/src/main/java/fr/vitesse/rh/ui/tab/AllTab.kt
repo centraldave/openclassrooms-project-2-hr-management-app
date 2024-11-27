@@ -32,15 +32,9 @@ fun AllTab(
     onCreationUpdatelick: () -> Unit = {},
     candidateUiState: CandidateUiState
 ) {
-    val query by remember { mutableStateOf("") }
-    val filteredCandidates = candidateUiState.candidateList.filter { candidate ->
-        candidate.firstName.contains(query, ignoreCase = true) ||
-                candidate.lastName.contains(query, ignoreCase = true)
-    }
-
     Column {
         LazyColumn() {
-            items(filteredCandidates) { candidate ->
+            items(candidateUiState.candidateList) { candidate ->
                 CandidateCell(
                     candidateService = candidateService,
                     candidate = candidate,

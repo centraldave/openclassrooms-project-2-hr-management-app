@@ -76,6 +76,6 @@ class RandomUserService @Inject constructor() {
 
     private fun getRandomSalary(min: Double, max: Double): Double {
         val randomSalary = Random.nextDouble(min, max)
-        return "%.2f".format(randomSalary).toDouble()
+        return "%.2f".format(randomSalary).replace(",", ".").toDouble()
     }
 }

@@ -20,6 +20,7 @@ import fr.vitesse.rh.data.model.Candidate
 import fr.vitesse.rh.data.service.CandidateService
 import fr.vitesse.rh.ui.common.CandidateCell
 import fr.vitesse.rh.ui.state.CandidateUiState
+import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
 
 @Composable
 fun FavoriteTab(
@@ -27,15 +28,9 @@ fun FavoriteTab(
     navController: NavController,
     onCandidateClick: (Candidate) -> Unit = {},
     onCreationUpdatelick: () -> Unit = {},
-    candidateUiState: CandidateUiState
+    candidateViewModel: CandidateViewModel
 ) {
-    val query by remember { mutableStateOf("") }
-    val favoriteCandidates = candidateUiState.candidateList.filter { it.isFavorite }
-
-    val filteredFavoriteCandidates = favoriteCandidates.filter { candidate ->
-        candidate.firstName.contains(query, ignoreCase = true) ||
-                candidate.lastName.contains(query, ignoreCase = true)
-    }
+    val filteredFavoriteCandidates = candidateViewModel.getFavoriteList()
 
     if (filteredFavoriteCandidates.isEmpty()) {
         Box(

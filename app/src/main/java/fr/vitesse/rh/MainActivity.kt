@@ -86,7 +86,6 @@ fun CandidateNavHost(
         navHostController,
         startDestination = Screen.Home.route
     ) {
-        // Home Screen
         composable(route = Screen.Home.route) {
             HomeScreen(
                 modifier = modifier,
@@ -102,7 +101,8 @@ fun CandidateNavHost(
                 },
                 onCreateUpdateClick = {
                     navHostController.navigate(Screen.CreateOrUpdateCandidate.route)
-                }
+                },
+                candidateViewModel = candidateViewModel
             )
         }
 
@@ -141,7 +141,6 @@ fun Loader() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Display App Logo
             Image(
                 painter = painterResource(id = R.drawable.vitesse_hr_logo),
                 contentDescription = stringResource(R.string.logo_hr_description),
@@ -155,7 +154,6 @@ fun Loader() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 16.dp)
             )
-            // Circular Loader
             CircularProgressIndicator(
                 modifier = Modifier.padding(top = 16.dp)
             )

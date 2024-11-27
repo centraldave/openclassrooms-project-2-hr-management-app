@@ -39,6 +39,7 @@ import fr.vitesse.rh.data.service.CandidateService
 import fr.vitesse.rh.ui.state.CandidateUiState
 import fr.vitesse.rh.ui.tab.AllTab
 import fr.vitesse.rh.ui.tab.FavoriteTab
+import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +48,7 @@ fun HomeScreen(
     navHostController: NavHostController,
     candidateService: CandidateService,
     candidateUiState: CandidateUiState,
+    candidateViewModel: CandidateViewModel,
     onCreateUpdateClick: () -> Unit = {},
     onCandidateClick: () -> Unit = {},
 ) {
@@ -76,7 +78,7 @@ fun HomeScreen(
             textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
             placeholder = {
                 Text(
-                    text = "Search candidates...",
+                    text = stringResource(R.string.search_placeholder),
                     style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray)
                 )
             },
@@ -132,7 +134,7 @@ fun HomeScreen(
                     onCreationUpdatelick = {
                         navHostController.navigate(Screen.CreateOrUpdateCandidate.route)
                     },
-                    candidateUiState = candidateUiState.copy(candidateList = filteredCandidates)
+                    candidateUiState = candidateUiState
                 )
             } else {
                 NoDataMessage()
@@ -149,7 +151,7 @@ fun HomeScreen(
                     onCreationUpdatelick = {
                         navHostController.navigate(Screen.CreateOrUpdateCandidate.route)
                     },
-                    candidateUiState = candidateUiState.copy(candidateList = filteredCandidates)
+                    candidateViewModel = candidateViewModel
                 )
             } else {
                 NoDataMessage()

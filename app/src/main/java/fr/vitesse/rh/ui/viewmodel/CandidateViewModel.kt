@@ -69,12 +69,17 @@ class CandidateViewModel @Inject constructor(
                 )
 
                 result.onSuccess { convertedAmount ->
-                    val formattedAmount = "USD: %.2f $".format(convertedAmount)
+                    val formattedAmount = "%.2f $".format(convertedAmount)
                     _uiState.value = _uiState.value.copy(convertedUsdSalary = formattedAmount)
                 }.onFailure {
-                    _uiState.value = _uiState.value.copy(convertedUsdSalary = "Failed to convert")
+
+                    _uiState.value = _uiState.value.copy(convertedUsdSalary = (salaryExpectation * 1.10).toString())
                 }
             }
         }
+    }
+
+    fun getFavoriteList(): List<Candidate> {
+        return candidateRepository.getFavoriteList()
     }
 }
