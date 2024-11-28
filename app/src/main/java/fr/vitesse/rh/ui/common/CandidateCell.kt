@@ -12,29 +12,24 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.vitesse.rh.R
 import fr.vitesse.rh.data.model.Candidate
-import fr.vitesse.rh.data.service.CandidateService
-import fr.vitesse.rh.data.service.RandomUserService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import fr.vitesse.rh.data.service.CandidateDetailService
 
 @Composable
 fun CandidateCell(
-    candidateService: CandidateService,
+    candidateDetailService: CandidateDetailService,
     candidate: Candidate,
     onCandidateClick: (Candidate) -> Unit,
 ) {
-    val profilePicture: Int = candidateService.getProfilePicture(candidate)
+    val profilePicture: Int = candidateDetailService.getProfilePicture(candidate)
     Row(
         modifier = Modifier
             .clickable {
@@ -75,28 +70,6 @@ fun CandidateCell(
                     color = Color.Gray
                 )
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CandidateCellPreview() {
-    val randomUserService = RandomUserService()
-    var randomCandidate: Candidate? = null
-    LaunchedEffect(Unit) {
-        launch(Dispatchers.IO) {
-            randomCandidate = randomUserService.generateCandidates(1).getOrNull()?.first()!!
-        }
-    }
-
-    MaterialTheme {
-        randomCandidate?.let {
-            CandidateCell(
-                candidateService = CandidateService(),
-                candidate = it,
-                onCandidateClick = {  }
-            )
         }
     }
 }

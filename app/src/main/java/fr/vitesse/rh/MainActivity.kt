@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,7 +33,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import fr.vitesse.rh.data.service.CandidateService
+import fr.vitesse.rh.data.service.CandidateDetailService
 import fr.vitesse.rh.ui.screen.CandidateScreen
 import fr.vitesse.rh.ui.screen.HomeScreen
 import fr.vitesse.rh.ui.screen.Screen
@@ -43,27 +43,26 @@ import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             VitesseRHTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val candidateViewModel: CandidateViewModel = hiltViewModel()
                     val candidateUiState by candidateViewModel.uiState.collectAsState()
-                    val candidateService = CandidateService()
-                    val navHostController = rememberNavController()
 
-                    LaunchedEffect(Unit) {
-                        candidateViewModel.readCandidateList()
-                    }
+                    val candidateDetailService = CandidateDetailService()
+                    val navHostController = rememberNavController()
 
                     if (candidateUiState.isLoading) {
                         Loader()
                     } else {
                         CandidateNavHost(
                             modifier = Modifier.padding(innerPadding),
-                            candidateService,
+                            candidateDetailService,
                             navHostController,
                             candidateUiState
                         )
@@ -77,7 +76,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CandidateNavHost(
     modifier: Modifier,
-    candidateService: CandidateService,
+    candidateDetailService: CandidateDetailService,
     navHostController: NavHostController,
     candidateUiState: CandidateUiState,
     candidateViewModel: CandidateViewModel = hiltViewModel()
@@ -90,7 +89,7 @@ fun CandidateNavHost(
             HomeScreen(
                 modifier = modifier,
                 navHostController,
-                candidateService,
+                candidateDetailService,
                 candidateUiState,
                 onCandidateClick = {
                     navHostController.navigate(
@@ -115,7 +114,7 @@ fun CandidateNavHost(
             if (candidate != null) {
                 CandidateScreen(
                     candidate = candidate,
-                    candidateService = candidateService,
+                    candidateDetailService = candidateDetailService,
                     candidateViewModel = candidateViewModel,
                     onBackClick = { navHostController.navigateUp() },
                     onCreateUpdateClick = {

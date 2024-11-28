@@ -1,36 +1,60 @@
 package fr.vitesse.rh.ui.viewmodel
 
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.vitesse.rh.data.model.Candidate
 import fr.vitesse.rh.data.repository.CandidateRepository
-import fr.vitesse.rh.data.service.CurrencyService
 import fr.vitesse.rh.data.service.RandomUserService
 import fr.vitesse.rh.ui.state.CandidateUiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class CandidateViewModel @Inject constructor(
     private val candidateRepository: CandidateRepository,
     private val randomUserService: RandomUserService,
-    private val currencyService: CurrencyService,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CandidateUiState())
     val uiState: StateFlow<CandidateUiState> = _uiState.asStateFlow()
 
-    fun readCandidateList() {
+    init {
         viewModelScope.launch {
-            _uiState.value = randomUserService.generateCandidates(10).getOrNull()?.let {
-                CandidateUiState(false, mutableIntStateOf(0), it)
-            }!!
+                fetchCandidatesOnInit(14)
+        }
+    }
+
+    suspend fun insertRandomCandidateList(candidateListCount: Int) {
+        withContext(Dispatchers.IO) {
+            repeat(candidateListCount) {
+                val candidate: Candidate? = randomUserService.fetchCandidate().getOrNull()
+                if (candidate != null) {
+                    candidateRepository.insertCandidate(candidate)
+                }
+            }
+        }
+        updateCandidateList()
+        _uiState.update { it.copy(isLoading = false) }
+    }
+
+    private suspend fun fetchCandidatesOnInit(candidateListCount: Int) {
+        _uiState.update { it.copy(isLoading = true) }
+        val candidates = candidateRepository.getCandidateList().firstOrNull()
+        if (candidates.isNullOrEmpty()) {
+        insertRandomCandidateList(candidateListCount)
+            }
+        val candidatesFlow = candidateRepository.getCandidateList()
+        candidatesFlow.collect { candidateList ->
+            _uiState.update { it.copy(candidateList = candidateList, isLoading = false) }
         }
     }
 
@@ -51,35 +75,50 @@ class CandidateViewModel @Inject constructor(
         // Todo: Naviguer vers l'edit
     }
 
-    fun deleteCandidate(candidate: Candidate, onBackClick: () -> Unit) {
-        val updatedCandidates = _uiState.value.candidateList.filterNot {
-            it.id == candidate.id
-        }
-        _uiState.value = _uiState.value.copy(candidateList = updatedCandidates)
-        onBackClick() // Navigate away after deletion
+    suspend fun deleteCandidate(candidate: Candidate, onBackClick: () -> Unit) {
+        candidateRepository.deleteCandidate(candidate)
+        onBackClick()
     }
 
-    fun getConvertedUsdFromEur(salaryExpectation: Double) {
-        if (_uiState.value.convertedUsdSalary.isNullOrEmpty()) {
+    fun getConvertedCurrencies(salaryExpectation: Double) {
+        if (_uiState.value.convertedUsdSalary.isNullOrEmpty()
+            || _uiState.value.convertedGbpSalary.isNullOrEmpty()
+            || _uiState.value.convertedJpySalary.isNullOrEmpty()) {
             viewModelScope.launch {
-                val result = currencyService.convertCurrency(
-                    amount = salaryExpectation,
-                    fromCurrency = "EUR",
-                    toCurrency = "USD"
-                )
+                val randomRateUsd = generateRandomRate(1.05, 1.20)
+                val randomRateGbp = generateRandomRate(0.85, 1.10)
+                val randomRateJpy = generateRandomRate(130.0, 150.0)
 
-                result.onSuccess { convertedAmount ->
-                    val formattedAmount = "%.2f $".format(convertedAmount)
-                    _uiState.value = _uiState.value.copy(convertedUsdSalary = formattedAmount)
-                }.onFailure {
+                val convertedUsd = salaryExpectation * randomRateUsd
+                val convertedGbp = salaryExpectation * randomRateGbp
+                val convertedJpy = salaryExpectation * randomRateJpy
 
-                    _uiState.value = _uiState.value.copy(convertedUsdSalary = (salaryExpectation * 1.10).toString())
+                // Format results
+                val formattedUsd = "%.2f USD".format(convertedUsd)
+                val formattedGbp = "%.2f GBP".format(convertedGbp)
+                val formattedJpy = "%.2f JPY".format(convertedJpy)
+
+                _uiState.update {
+                    it.copy(
+                        convertedUsdSalary = formattedUsd,
+                        convertedGbpSalary = formattedGbp,
+                        convertedJpySalary = formattedJpy
+                    )
                 }
             }
         }
     }
 
-    fun getFavoriteList(): List<Candidate> {
-        return candidateRepository.getFavoriteList()
+    private fun generateRandomRate(min: Double, max: Double): Double {
+        return Random.nextDouble (min, max)
+    }
+
+    fun updateCandidateList() {
+        viewModelScope.launch {
+            val candidatesFlow = candidateRepository.getCandidateList()
+            candidatesFlow.collect { candidateList ->
+                _uiState.update { it.copy(candidateList = candidateList, isLoading = false) }
+            }
+        }
     }
 }

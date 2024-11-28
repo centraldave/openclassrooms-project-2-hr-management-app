@@ -1,43 +1,19 @@
 package fr.vitesse.rh.data.service
 
-import androidx.compose.ui.res.stringResource
-import fr.vitesse.rh.R
+import fr.vitesse.rh.data.dao.CandidateDao
 import fr.vitesse.rh.data.model.Candidate
-import fr.vitesse.rh.data.model.GenderEnum
-import java.time.LocalDate
-import java.time.Period
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import android.content.Context
+import fr.vitesse.rh.data.repository.CandidateRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class CandidateService {
-    fun getProfilePicture(candidate: Candidate): Int {
-        return candidate.profilePicture ?: getDefaultProfilePicture(candidate.gender)
-    }
+class CandidateService @Inject constructor(private val candidateDao: CandidateDao): CandidateRepository {
+    override fun getCandidate(id: Long): Flow<Candidate?> = candidateDao.getCandidate(id)
 
-    fun getDefaultProfilePicture(gender: GenderEnum): Int {
-        return R.drawable.default_candidate
-    }
+    override fun getCandidateList(): Flow<List<Candidate>> = candidateDao.getCandidateList()
 
-    fun getFormattedBirthday(candidate: Candidate, context: Context): String {
-        val birthDate = candidate.dateOfBirth
+    override suspend fun insertCandidate(candidate: Candidate) = candidateDao.insertCandidate(candidate)
 
-        birthDate?.let {
-            val localDate = it.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    override suspend fun updateCandidate(candidate: Candidate) = candidateDao.updateCandidate(candidate)
 
-            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-            val formattedBirthDate = localDate.format(formatter)
-
-            val age = Period.between(localDate, LocalDate.now()).years
-
-            val suffix = context.getString(R.string.birthdate_sufix)
-            return "$formattedBirthDate ($age $suffix)"
-        }
-
-        return "Date not available"
-    }
-
-    fun getSalaryExpectation(candidate: Candidate): String {
-        return "${candidate.salaryExpectations} €"
-    }
+    override suspend fun deleteCandidate(candidate: Candidate) = candidateDao.deleteCandidate(candidate)
 }

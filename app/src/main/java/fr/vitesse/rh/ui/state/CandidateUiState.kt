@@ -5,8 +5,15 @@ import androidx.compose.runtime.mutableIntStateOf
 import fr.vitesse.rh.data.model.Candidate
 
 data class CandidateUiState(
+    // Common
     val isLoading: Boolean = true,
-    val selectedTab: MutableState<Int> = mutableIntStateOf(0),
+    val tabIndex: MutableState<Int> = mutableIntStateOf(0),
+
+    // Database
     val candidateList: List<Candidate> = emptyList(),
+
+    // Detail
     val convertedUsdSalary: String? = null,
+    val convertedGbpSalary: String? = null,
+    val convertedJpySalary: String? = null
 )

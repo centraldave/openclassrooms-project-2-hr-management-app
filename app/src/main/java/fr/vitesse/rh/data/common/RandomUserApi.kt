@@ -9,7 +9,6 @@ interface RandomUserApi {
     @GET
     suspend fun getRandomUsers(
         @Url url: String,
-        @Query("nat") locale: String = "fr",
-        @Query("gender") gender: String
+        @Query("nat") locale: String = "fr"
     ): RandomUserResponse
 }

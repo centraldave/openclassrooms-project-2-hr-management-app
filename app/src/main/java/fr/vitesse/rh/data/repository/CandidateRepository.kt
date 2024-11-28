@@ -1,12 +1,17 @@
 package fr.vitesse.rh.data.repository
 
 import fr.vitesse.rh.data.model.Candidate
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
-class CandidateRepository @Inject constructor(
-    // Todo: Dao ROOM
-) {
-    fun getFavoriteList(): List<Candidate> {
-        TODO("Apres Room")
-    }
+interface CandidateRepository {
+
+    fun getCandidate(id: Long): Flow<Candidate?>
+
+    fun getCandidateList(): Flow<List<Candidate>>
+
+    suspend fun insertCandidate(candidate: Candidate)
+
+    suspend fun updateCandidate(candidate: Candidate)
+
+    suspend fun deleteCandidate(candidate: Candidate)
 }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -35,10 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fr.vitesse.rh.NoDataMessage
 import fr.vitesse.rh.R
-import fr.vitesse.rh.data.service.CandidateService
+import fr.vitesse.rh.data.model.Candidate
+import fr.vitesse.rh.data.service.CandidateDetailService
+import fr.vitesse.rh.ui.common.CandidateCell
 import fr.vitesse.rh.ui.state.CandidateUiState
-import fr.vitesse.rh.ui.tab.AllTab
-import fr.vitesse.rh.ui.tab.FavoriteTab
 import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,23 +48,35 @@ import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navHostController: NavHostController,
-    candidateService: CandidateService,
+    candidateDetailService: CandidateDetailService,
     candidateUiState: CandidateUiState,
     candidateViewModel: CandidateViewModel,
     onCreateUpdateClick: () -> Unit = {},
-    onCandidateClick: () -> Unit = {},
+    onCandidateClick: (Candidate) -> Unit = {},
 ) {
     val tabNameList = listOf(stringResource(R.string.all_tab), stringResource(R.string.favorite_tab))
     var searchQuery by remember { mutableStateOf("") }
-    val filteredCandidates = candidateUiState.candidateList.filter {
-        it.firstName.contains(searchQuery, ignoreCase = true) || it.lastName.contains(searchQuery, ignoreCase = true)
+
+    // Filter candidates based on the active tab and the search query
+    val filteredCandidates = when (candidateUiState.tabIndex.value) {
+        0 -> candidateUiState.candidateList.filter {
+            it.firstName.contains(searchQuery, ignoreCase = true) ||
+                    it.lastName.contains(searchQuery, ignoreCase = true)
+        }
+        1 -> candidateUiState.candidateList.filter {
+            it.isFavorite &&
+                    (it.firstName.contains(searchQuery, ignoreCase = true) ||
+                            it.lastName.contains(searchQuery, ignoreCase = true))
+        }
+        else -> emptyList()
     }
 
     Column(modifier = modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.vitesse_hr_logo),
             contentDescription = "Vitesse HR Logo",
-            modifier = Modifier.width(100.dp)
+            modifier = Modifier
+                .width(100.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(8.dp)
         )
@@ -101,7 +115,7 @@ fun HomeScreen(
                 }
             },
             singleLine = true,
-            shape = RoundedCornerShape(12.dp), // Rounded corners
+            shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.Transparent,
                 focusedIndicatorColor = MaterialTheme.colorScheme.primary,
@@ -110,52 +124,33 @@ fun HomeScreen(
         )
 
         TabRow(
-            selectedTabIndex = candidateUiState.selectedTab.value
+            selectedTabIndex = candidateUiState.tabIndex.value
         ) {
             tabNameList.forEachIndexed { index, title ->
                 Tab(
-                    selected = candidateUiState.selectedTab.value == index,
-                    onClick = { candidateUiState.selectedTab.value = index },
+                    selected = candidateUiState.tabIndex.value == index,
+                    onClick = { candidateUiState.tabIndex.value = index },
                     text = { Text(text = title) }
                 )
             }
         }
 
-        when (candidateUiState.selectedTab.value) {
-            0 -> if (filteredCandidates.isNotEmpty()) {
-                AllTab(
-                    candidateService = candidateService,
-                    navController = navHostController,
-                    onCandidateClick = {
-                        navHostController.navigate(
-                            Screen.DetailCandidate.createRoute(candidateId = it.id.toString())
-                        )
-                    },
-                    onCreationUpdatelick = {
-                        navHostController.navigate(Screen.CreateOrUpdateCandidate.route)
-                    },
-                    candidateUiState = candidateUiState
-                )
-            } else {
-                NoDataMessage()
+        if (filteredCandidates.isNotEmpty()) {
+            LazyColumn {
+                items(filteredCandidates) { candidate ->
+                    CandidateCell(
+                        candidateDetailService = candidateDetailService,
+                        candidate = candidate,
+                        onCandidateClick = {
+                            navHostController.navigate(
+                                Screen.DetailCandidate.createRoute(candidateId = candidate.id.toString())
+                            )
+                        }
+                    )
+                }
             }
-            1 -> if (filteredCandidates.isNotEmpty()) {
-                FavoriteTab(
-                    candidateService = candidateService,
-                    navController = navHostController,
-                    onCandidateClick = {
-                        navHostController.navigate(
-                            Screen.DetailCandidate.createRoute(candidateId = it.id.toString())
-                        )
-                    },
-                    onCreationUpdatelick = {
-                        navHostController.navigate(Screen.CreateOrUpdateCandidate.route)
-                    },
-                    candidateViewModel = candidateViewModel
-                )
-            } else {
-                NoDataMessage()
-            }
+        } else {
+            NoDataMessage()
         }
     }
 }

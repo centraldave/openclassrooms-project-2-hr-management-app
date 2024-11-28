@@ -45,22 +45,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.vitesse.rh.R
 import fr.vitesse.rh.data.model.Candidate
-import fr.vitesse.rh.data.service.CandidateService
+import fr.vitesse.rh.data.service.CandidateDetailService
 import fr.vitesse.rh.ui.state.CandidateUiState
 import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CandidateScreen(
     modifier: Modifier = Modifier,
     candidate: Candidate,
-    candidateService: CandidateService,
+    candidateDetailService: CandidateDetailService,
     onBackClick: () -> Unit,
     candidateViewModel: CandidateViewModel,
     onCreateUpdateClick: () -> Unit
 ) {
     val uiState by candidateViewModel.uiState.collectAsState()
     LaunchedEffect(candidate.salaryExpectations) {
-        candidateViewModel.getConvertedUsdFromEur(candidate.salaryExpectations)
+        candidateViewModel.getConvertedCurrencies(candidate.salaryExpectations)
     }
     val updatedCandidate = uiState.candidateList.find { it.id == candidate.id }
 
@@ -75,14 +79,18 @@ fun CandidateScreen(
                 onBackClick = onBackClick,
                 onFavoriteClick = { candidateViewModel.toggleFavorite(updatedCandidate) },
                 onEditClick = { candidateViewModel.editCandidate(updatedCandidate) },
-                onDeleteClick = { candidateViewModel.deleteCandidate(updatedCandidate, onBackClick) }
+                onDeleteClick = {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        candidateViewModel.deleteCandidate(updatedCandidate, onBackClick)
+                    }
+                }
             )
         },
         content = { padding ->
             CandidateDetails(
                 modifier = Modifier.padding(padding),
                 candidate = updatedCandidate,
-                candidateService = candidateService,
+                candidateDetailService = candidateDetailService,
                 uiState = uiState
             )
         }
@@ -144,7 +152,7 @@ fun CandidateTopBar(
 fun CandidateDetails(
     modifier: Modifier,
     candidate: Candidate,
-    candidateService: CandidateService,
+    candidateDetailService: CandidateDetailService,
     uiState: CandidateUiState
 ) {
     val context = LocalContext.current
@@ -158,7 +166,7 @@ fun CandidateDetails(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = candidateService.getProfilePicture(candidate)),
+                painter = painterResource(id = candidateDetailService.getProfilePicture(candidate)),
                 contentDescription = stringResource(R.string.profile_picture_description),
                 modifier = Modifier
                     .height(175.dp)
@@ -194,7 +202,7 @@ fun CandidateDetails(
 
         CandidateInfoCard(
             title = stringResource(R.string.about_title),
-            body = candidateService.getFormattedBirthday(candidate, context),
+            body = candidateDetailService.getFormattedBirthday(candidate, context),
             label = stringResource(R.string.about_description)
         )
 
@@ -202,7 +210,7 @@ fun CandidateDetails(
 
         CandidateInfoCard(
             title = stringResource(R.string.salary_expectations_title),
-            body = candidateService.getSalaryExpectation(candidate),
+            body = candidateDetailService.getSalaryExpectation(candidate),
             label = "USD: " + uiState.convertedUsdSalary
         )
 

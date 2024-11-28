@@ -3,29 +3,27 @@ package fr.vitesse.rh.data.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import fr.vitesse.rh.data.model.Candidate
-import java.util.UUID
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CandidateDao {
 
-    @Insert
-    suspend fun insert(candidate: Candidate)
-
-    @Insert
-    suspend fun insertAll(candidates: List<Candidate>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertCandidate(candidate: Candidate)
 
     @Update
-    suspend fun update(candidate: Candidate)
+    fun updateCandidate(candidate: Candidate)
 
     @Delete
-    suspend fun delete(candidate: Candidate)
+    fun deleteCandidate(candidate: Candidate)
 
-    @Query("SELECT * FROM candidates")
-    suspend fun getAllCandidates(): List<Candidate>
+    @Query("SELECT * FROM candidate_list WHERE id = :id  LIMIT 1")
+    fun getCandidate(id: Long): Flow<Candidate>
 
-    @Query("SELECT * FROM candidates WHERE id = :id")
-    suspend fun getCandidateById(id: UUID): Candidate?
+    @Query("SELECT * FROM candidate_list ORDER BY lastName ASC")
+    fun getCandidateList(): Flow<List<Candidate>>
 }
