@@ -17,4 +17,11 @@
     <string name="birthdate_sufix">ans</string>
     <string name="salary_expectations_title">Prétentions salariales</string>
     <string name="notes_title">Notes</string>
+    <string name="description_button_add">Add</string>
+    <string name="description_button_edit">Edit</string>
+    <string name="create_fragment_label">Create</string>
+    <string name="contentDescription_go_back">Go back</string>
+    <string name="action_save">Save</string>
+    <string name="deletion_title">Suppression</string>
+    <string name="deletion_description">Êtes-vous sûr de vouloir supprimer ce candidat ? Cette action est irréversible.</string>
 </resources>

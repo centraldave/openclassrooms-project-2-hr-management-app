@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import fr.vitesse.rh.data.service.CandidateDetailService
 import fr.vitesse.rh.ui.screen.CandidateScreen
+import fr.vitesse.rh.ui.screen.CreateUpdateScreen
 import fr.vitesse.rh.ui.screen.HomeScreen
 import fr.vitesse.rh.ui.screen.Screen
 import fr.vitesse.rh.ui.state.CandidateUiState
@@ -72,7 +73,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun CandidateNavHost(
     modifier: Modifier,
@@ -82,15 +82,15 @@ fun CandidateNavHost(
     candidateViewModel: CandidateViewModel = hiltViewModel()
 ) {
     NavHost(
-        navHostController,
+        navController = navHostController,
         startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Home.route) {
             HomeScreen(
                 modifier = modifier,
-                navHostController,
-                candidateDetailService,
-                candidateUiState,
+                navHostController = navHostController,
+                candidateDetailService = candidateDetailService,
+                candidateUiState = candidateUiState,
                 onCandidateClick = {
                     navHostController.navigate(
                         Screen.DetailCandidate.createRoute(
@@ -99,7 +99,7 @@ fun CandidateNavHost(
                     )
                 },
                 onCreateUpdateClick = {
-                    navHostController.navigate(Screen.CreateOrUpdateCandidate.route)
+                    navHostController.navigate(Screen.CreateOrUpdateCandidate.createRoute(null))
                 },
                 candidateViewModel = candidateViewModel
             )
@@ -126,6 +126,25 @@ fun CandidateNavHost(
             } else {
                 Text(text = "Candidate not found", modifier = Modifier.padding(16.dp))
             }
+        }
+
+        composable(
+            route = Screen.CreateOrUpdateCandidate.route,
+            arguments = Screen.CreateOrUpdateCandidate.navArguments
+        ) {
+            val candidateId = it.arguments?.getString("candidateId")
+            val candidate = candidateId?.let { id ->
+                candidateUiState.candidateList.firstOrNull { it.id.toString() == id }
+            }
+
+            CreateUpdateScreen(
+                candidate = candidate,
+                onBackClick = { navHostController.navigateUp() },
+                onCreateUpdateClick = {
+                    navHostController.navigateUp()
+                },
+                viewModel = candidateViewModel
+            )
         }
     }
 }

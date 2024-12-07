@@ -6,7 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import fr.vitesse.rh.data.common.CandidateDatabase
 import fr.vitesse.rh.data.dao.CandidateDao
 import fr.vitesse.rh.data.model.Candidate
-import fr.vitesse.rh.data.model.GenderEnum
 import kotlinx.coroutines.flow.first
 import org.junit.After
 import org.junit.Assert.assertEquals

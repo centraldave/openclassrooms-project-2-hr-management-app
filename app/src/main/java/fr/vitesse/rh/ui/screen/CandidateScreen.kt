@@ -1,7 +1,10 @@
 package fr.vitesse.rh.ui.screen
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +24,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,11 +32,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,12 +68,14 @@ fun CandidateScreen(
     candidateDetailService: CandidateDetailService,
     onBackClick: () -> Unit,
     candidateViewModel: CandidateViewModel,
-    onCreateUpdateClick: () -> Unit
+    onCreateUpdateClick: (Candidate) -> Unit
 ) {
     val uiState by candidateViewModel.uiState.collectAsState()
+
     LaunchedEffect(candidate.salaryExpectations) {
         candidateViewModel.getConvertedCurrencies(candidate.salaryExpectations)
     }
+
     val updatedCandidate = uiState.candidateList.find { it.id == candidate.id }
 
     if (updatedCandidate == null) {
@@ -78,7 +88,7 @@ fun CandidateScreen(
                 candidate = updatedCandidate,
                 onBackClick = onBackClick,
                 onFavoriteClick = { candidateViewModel.toggleFavorite(updatedCandidate) },
-                onEditClick = { candidateViewModel.editCandidate(updatedCandidate) },
+                onCreateUpdateClick = { onCreateUpdateClick(updatedCandidate) },
                 onDeleteClick = {
                     CoroutineScope(Dispatchers.Main).launch {
                         candidateViewModel.deleteCandidate(updatedCandidate, onBackClick)
@@ -99,15 +109,18 @@ fun CandidateScreen(
 
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CandidateTopBar(
     candidate: Candidate,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
-    onEditClick: () -> Unit,
+    onCreateUpdateClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+
     TopAppBar(
         title = {
             Text(
@@ -132,13 +145,13 @@ fun CandidateTopBar(
                     tint = if (candidate.isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                 )
             }
-            IconButton(onClick = onEditClick) {
+            IconButton(onClick = onCreateUpdateClick) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = "Edit"
                 )
             }
-            IconButton(onClick = onDeleteClick) {
+            IconButton(onClick = { showDeleteConfirmation = true }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete"
@@ -146,7 +159,33 @@ fun CandidateTopBar(
             }
         }
     )
+
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmation = false },
+            title = { Text(stringResource(R.string.deletion_title)) },
+            text = { Text(stringResource(R.string.deletion_description)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteConfirmation = false
+                        onDeleteClick()
+                    }
+                ) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteConfirmation = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 }
+
 
 @Composable
 fun CandidateDetails(
@@ -166,7 +205,7 @@ fun CandidateDetails(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = candidateDetailService.getProfilePicture(candidate)),
+                painter = painterResource(id = candidateDetailService.getDefaultProfilePicture()),
                 contentDescription = stringResource(R.string.profile_picture_description),
                 modifier = Modifier
                     .height(175.dp)
@@ -186,16 +225,36 @@ fun CandidateDetails(
         ) {
             CircleWithIconAndLabel(
                 icon = Icons.Default.Call,
-                label = stringResource(R.string.phone_description)
-            )
+                label = stringResource(R.string.phone_description),
+                value = candidate.phoneNumber
+            ) { phoneNumber ->
+                val intent = Intent(Intent.ACTION_DIAL).apply {
+                    data = Uri.parse("tel:$phoneNumber")
+                }
+                context.startActivity(intent)
+            }
+
             CircleWithIconAndLabel(
                 icon = Icons.Default.Phone,
-                label = stringResource(R.string.sms_description)
-            )
+                label = stringResource(R.string.sms_description),
+                value = candidate.phoneNumber
+            ) { phoneNumber ->
+                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                    data = Uri.parse("smsto:$phoneNumber")
+                }
+                context.startActivity(intent)
+            }
+
             CircleWithIconAndLabel(
                 icon = Icons.Default.Email,
-                label = stringResource(R.string.e_mail_description)
-            )
+                label = stringResource(R.string.e_mail_description),
+                value = candidate.emailAddress
+            ) { email ->
+                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                    data = Uri.parse("mailto:$email")
+                }
+                context.startActivity(intent)
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -226,6 +285,7 @@ fun CandidateDetails(
 
 
 
+
 @Composable
 fun CandidateInfoCard(
     modifier: Modifier = Modifier,
@@ -242,7 +302,6 @@ fun CandidateInfoCard(
                 .padding(32.dp)
                 .fillMaxWidth()
         ) {
-            // Title
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
@@ -251,7 +310,6 @@ fun CandidateInfoCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Body
             Text(
                 text = body,
                 style = MaterialTheme.typography.bodyLarge,
@@ -260,7 +318,6 @@ fun CandidateInfoCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Label
             Text(
                 text = label,
                 style = MaterialTheme.typography.bodySmall,
@@ -271,7 +328,12 @@ fun CandidateInfoCard(
 }
 
 @Composable
-fun CircleWithIconAndLabel(icon: ImageVector, label: String) {
+fun CircleWithIconAndLabel(
+    icon: ImageVector,
+    label: String,
+    value: String,
+    onClick: (String) -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -285,6 +347,7 @@ fun CircleWithIconAndLabel(icon: ImageVector, label: String) {
                 .size(40.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary)
+                .clickable { onClick(value) }
         ) {
             Icon(
                 imageVector = icon,

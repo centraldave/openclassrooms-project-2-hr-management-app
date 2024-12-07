@@ -16,16 +16,17 @@ sealed class Screen(
             type = NavType.StringType
         })
     ) {
-        fun createRoute(candidateId: String) = "candidateDetail/$candidateId"
+        fun createRoute(candidateId: String): String = "candidateDetail/$candidateId"
     }
 
     data object CreateOrUpdateCandidate : Screen(
-        route = "update/{candidateId}",
+        route = "createOrEditCandidate/{candidateId}",
         navArguments = listOf(navArgument("candidateId") {
             type = NavType.StringType
             nullable = true
         })
     ) {
-        fun createRoute(candidateId: String?) = "createOrEditCandidate/$candidateId"
+        fun createRoute(candidateId: String?): String =
+            if (candidateId.isNullOrEmpty()) "createOrEditCandidate/" else "createOrEditCandidate/$candidateId"
     }
 }

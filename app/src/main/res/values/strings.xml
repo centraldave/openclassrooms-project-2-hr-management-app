@@ -16,4 +16,11 @@
     <string name="birthdate_sufix">years old</string>
     <string name="salary_expectations_title">Salary Expectations</string>
     <string name="notes_title">Notes</string>
+    <string name="description_button_add">Add</string>
+    <string name="description_button_edit">Edit</string>
+    <string name="create_fragment_label">Create</string>
+    <string name="contentDescription_go_back">Go back</string>
+    <string name="action_save">Save</string>
+    <string name="deletion_title">Delete</string>
+    <string name="deletion_description">Are you sure you want to delete this candidate? This action cannot be undone.</string>
 </resources>

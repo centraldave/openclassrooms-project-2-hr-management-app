@@ -71,43 +71,67 @@ class CandidateViewModel @Inject constructor(
         }
     }
 
-    fun editCandidate(candidate: Candidate) {
-        // Todo: Naviguer vers l'edit
-    }
-
     suspend fun deleteCandidate(candidate: Candidate, onBackClick: () -> Unit) {
         candidateRepository.deleteCandidate(candidate)
         onBackClick()
     }
 
-    fun getConvertedCurrencies(salaryExpectation: Double) {
-        if (_uiState.value.convertedUsdSalary.isNullOrEmpty()
-            || _uiState.value.convertedGbpSalary.isNullOrEmpty()
-            || _uiState.value.convertedJpySalary.isNullOrEmpty()) {
-            viewModelScope.launch {
-                val randomRateUsd = generateRandomRate(1.05, 1.20)
-                val randomRateGbp = generateRandomRate(0.85, 1.10)
-                val randomRateJpy = generateRandomRate(130.0, 150.0)
 
-                val convertedUsd = salaryExpectation * randomRateUsd
-                val convertedGbp = salaryExpectation * randomRateGbp
-                val convertedJpy = salaryExpectation * randomRateJpy
+    fun insertCandidate(candidate: Candidate, onBackClick: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            candidateRepository.insertCandidate(candidate)
 
-                // Format results
-                val formattedUsd = "%.2f USD".format(convertedUsd)
-                val formattedGbp = "%.2f GBP".format(convertedGbp)
-                val formattedJpy = "%.2f JPY".format(convertedJpy)
-
-                _uiState.update {
-                    it.copy(
-                        convertedUsdSalary = formattedUsd,
-                        convertedGbpSalary = formattedGbp,
-                        convertedJpySalary = formattedJpy
-                    )
-                }
+            withContext(Dispatchers.Main) {
+                onBackClick()
             }
         }
     }
+
+    fun updateCandidate(candidate: Candidate, onBackClick: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            candidateRepository.updateCandidate(candidate)
+
+            withContext(Dispatchers.Main) {
+                onBackClick()
+            }
+        }
+    }
+
+    fun getConvertedCurrencies(salaryExpectation: String) {
+        val salary = salaryExpectation.toDoubleOrNull()
+
+        if (salary != null) {
+            if (_uiState.value.convertedUsdSalary.isNullOrEmpty()
+                || _uiState.value.convertedGbpSalary.isNullOrEmpty()
+                || _uiState.value.convertedJpySalary.isNullOrEmpty()) {
+
+                viewModelScope.launch {
+                    val randomRateUsd = generateRandomRate(1.05, 1.20)
+                    val randomRateGbp = generateRandomRate(0.85, 1.10)
+                    val randomRateJpy = generateRandomRate(130.0, 150.0)
+
+                    val convertedUsd = salary * randomRateUsd
+                    val convertedGbp = salary * randomRateGbp
+                    val convertedJpy = salary * randomRateJpy
+
+                    val formattedUsd = "%.2f USD".format(convertedUsd)
+                    val formattedGbp = "%.2f GBP".format(convertedGbp)
+                    val formattedJpy = "%.2f JPY".format(convertedJpy)
+
+                    _uiState.update {
+                        it.copy(
+                            convertedUsdSalary = formattedUsd,
+                            convertedGbpSalary = formattedGbp,
+                            convertedJpySalary = formattedJpy
+                        )
+                    }
+                }
+            }
+        } else {
+            println("Invalid salary input")
+        }
+    }
+
 
     private fun generateRandomRate(min: Double, max: Double): Double {
         return Random.nextDouble (min, max)

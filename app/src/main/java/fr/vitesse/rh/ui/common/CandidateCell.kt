@@ -29,7 +29,7 @@ fun CandidateCell(
     candidate: Candidate,
     onCandidateClick: (Candidate) -> Unit,
 ) {
-    val profilePicture: Int = candidateDetailService.getProfilePicture(candidate)
+    val profilePicture: Int = candidateDetailService.getDefaultProfilePicture()
     Row(
         modifier = Modifier
             .clickable {

@@ -8,13 +8,13 @@ import java.util.Date
 data class Candidate(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
-    val dateOfBirth: Date,
-    val gender: GenderEnum,
+    val profilePicture: Int?,
     val firstName: String,
     val lastName: String,
-    val profilePicture: Int?,
+    val dateOfBirth: String,
     val phoneNumber: String,
-    val salaryExpectations: Double,
+    val emailAddress: String,
+    val salaryExpectations: String,
     val note: String,
     val isFavorite: Boolean
 )
