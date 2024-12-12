@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Create
@@ -39,6 +40,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import fr.vitesse.rh.R
@@ -55,7 +58,7 @@ fun CreateSaveScreen(
     onBackClick: () -> Unit,
     viewModel: CandidateViewModel
 ) {
-    val screenTitle = if (candidate == null) "Sauvegarder" else "Mettre à jour"
+    val screenTitle = if (candidate == null) stringResource(R.string.action_save) else stringResource(R.string.action_update)
     var firstName = remember { mutableStateOf(candidate?.firstName ?: "") }
     var lastName = remember { mutableStateOf(candidate?.lastName ?: "") }
     var phone = remember { mutableStateOf(candidate?.phoneNumber ?: "") }
@@ -109,7 +112,7 @@ fun CreateSaveScreen(
                 note = note.value,
                 isFavorite = false,
                 profilePicture = null,
-                id = candidate?.id ?: 0
+                id = candidate.id
             ) ?: Candidate(
                 id = 0,
                 firstName = firstName.value,
@@ -144,7 +147,7 @@ fun CreateSaveScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons. AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -249,7 +252,8 @@ fun CreateSaveScreen(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .fillMaxWidth()
-                        .padding(32.dp),
+                        .padding(32.dp)
+                        .semantics { contentDescription = "Save Button" },
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Text(text = if (candidate == null) stringResource(R.string.action_save) else stringResource(R.string.action_update))

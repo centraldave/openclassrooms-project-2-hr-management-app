@@ -32,7 +32,6 @@ import fr.vitesse.rh.ui.state.CandidateUiState
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navHostController: NavHostController,
-    candidateInformationService: CandidateInformationService,
     candidateUiState: CandidateUiState,
     onCreateUpdateClick: () -> Unit = {},
 ) {

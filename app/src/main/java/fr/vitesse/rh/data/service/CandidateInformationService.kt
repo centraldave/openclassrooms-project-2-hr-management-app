@@ -12,21 +12,19 @@ class CandidateInformationService {
     fun getFormattedBirthday(candidate: Candidate, context: Context): String {
         val birthDate = candidate.dateOfBirth
 
-        birthDate?.let {
-            try {
-                val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                val localDate = LocalDate.parse(it, dateFormatter)
+        try {
+            val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val localDate = LocalDate.parse(birthDate, dateFormatter)
 
-                val formattedBirthDate = localDate.format(dateFormatter)
+            val formattedBirthDate = localDate.format(dateFormatter)
 
-                val age = Period.between(localDate, LocalDate.now()).years
+            val age = Period.between(localDate, LocalDate.now()).years
 
-                val suffix = context.getString(R.string.birthdate_sufix)
+            val suffix = context.getString(R.string.birthdate_sufix)
 
-                return "$formattedBirthDate ($age $suffix)"
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            return "$formattedBirthDate ($age $suffix)"
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
         return "Date not available"

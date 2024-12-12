@@ -33,11 +33,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -48,6 +48,13 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/NOTICE"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/LICENSE.txt"
+            excludes += "META-INF/NOTICE.txt"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -62,7 +69,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
     implementation("androidx.room:room-runtime:2.5.0")
-    implementation(libs.androidx.junit.ktx)
+    implementation(libs.hilt.android.testing)
     kapt("androidx.room:room-compiler:2.5.0")
     implementation("androidx.room:room-ktx:2.5.0")
 
@@ -72,8 +79,35 @@ dependencies {
 
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
     kaptAndroidTest("com.google.dagger:hilt-compiler:2.52")
+    kaptTest("com.google.dagger:hilt-compiler:2.52")
     testImplementation("com.google.truth:truth:1.4.4")
     androidTestImplementation("com.google.truth:truth:1.4.4")
+
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test:core:1.5.0")
+
+    implementation("org.mockito:mockito-core:4.0.0")
+    implementation("org.mockito:mockito-inline:4.0.0")
+    testImplementation("io.mockk:mockk:1.13.3")
+
+    // Hilt dependencies for testing
+    implementation("androidx.arch.core:core-testing:2.1.0")
+    implementation("junit:junit:4.13.2")
+    implementation("org.mockito:mockito-core:4.0.0")
+    implementation("org.mockito:mockito-inline:4.0.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
+    implementation("androidx.compose.ui:ui-test-junit4:1.6.0")  // For Compose testing
+    implementation("androidx.compose.ui:ui-test-manifest:1.6.0") // For Compose test manifest
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.0")  // For coroutines testing
+    testImplementation("io.mockk:mockk:1.13.5") // Latest version as of now
+    androidTestImplementation("io.mockk:mockk-android:1.13.5")
+
+
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
@@ -85,11 +119,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

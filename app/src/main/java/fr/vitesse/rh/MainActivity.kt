@@ -89,7 +89,6 @@ fun CandidateNavHost(
             HomeScreen(
                 modifier = modifier,
                 navHostController = navHostController,
-                candidateInformationService = candidateInformationService,
                 candidateUiState = candidateUiState,
                 onCreateUpdateClick = {
                     navHostController.navigate(Screen.CreateOrUpdateCandidate.createRoute(null))

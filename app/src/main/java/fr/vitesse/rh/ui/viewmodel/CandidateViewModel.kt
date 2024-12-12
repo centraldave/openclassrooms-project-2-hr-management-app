@@ -21,42 +21,43 @@ import kotlin.random.Random
 @HiltViewModel
 class CandidateViewModel @Inject constructor(
     private val candidateRepository: CandidateRepository,
-    private val randomUserService: RandomUserService,
+//    private val randomUserService: RandomUserService,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CandidateUiState())
     val uiState: StateFlow<CandidateUiState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            fetchCandidatesOnInit(14)
-        }
-    }
-
-    suspend fun insertRandomCandidateList(candidateListCount: Int) {
-        withContext(Dispatchers.IO) {
-            repeat(candidateListCount) {
-                val candidate: Candidate? = randomUserService.fetchCandidate().getOrNull()
-                if (candidate != null) {
-                    candidateRepository.insertCandidate(candidate)
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            fetchCandidatesOnInit(14)
+//        }
         updateCandidateList()
-        _uiState.update { it.copy(isLoading = false) }
     }
 
-    private suspend fun fetchCandidatesOnInit(candidateListCount: Int) {
-        _uiState.update { it.copy(isLoading = true) }
-        val candidates = candidateRepository.getCandidateList().firstOrNull()
-        if (candidates.isNullOrEmpty()) {
-            insertRandomCandidateList(candidateListCount)
-        }
-        val candidatesFlow = candidateRepository.getCandidateList()
-        candidatesFlow.collect { candidateList ->
-            _uiState.update { it.copy(candidateList = candidateList, isLoading = false) }
-        }
-    }
+//    suspend fun insertRandomCandidateList(candidateListCount: Int) {
+//        withContext(Dispatchers.IO) {
+//            repeat(candidateListCount) {
+//                val candidate: Candidate? = randomUserService.fetchCandidate().getOrNull()
+//                if (candidate != null) {
+//                    candidateRepository.insertCandidate(candidate)
+//                }
+//            }
+//        }
+//        updateCandidateList()
+//        _uiState.update { it.copy(isLoading = false) }
+//    }
+//
+//    private suspend fun fetchCandidatesOnInit(candidateListCount: Int) {
+//        _uiState.update { it.copy(isLoading = true) }
+//        val candidates = candidateRepository.getCandidateList().firstOrNull()
+//        if (candidates.isNullOrEmpty()) {
+//            insertRandomCandidateList(candidateListCount)
+//        }
+//        val candidatesFlow = candidateRepository.getCandidateList()
+//        candidatesFlow.collect { candidateList ->
+//            _uiState.update { it.copy(candidateList = candidateList, isLoading = false) }
+//        }
+//    }
 
     fun toggleFavorite(candidate: Candidate) {
         _uiState.update { currentState ->
