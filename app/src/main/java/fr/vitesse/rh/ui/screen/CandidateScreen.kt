@@ -3,18 +3,17 @@ package fr.vitesse.rh.ui.screen
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,9 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -53,7 +48,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.vitesse.rh.R
 import fr.vitesse.rh.data.model.Candidate
-import fr.vitesse.rh.data.service.CandidateDetailService
+import fr.vitesse.rh.data.service.CandidateInformationService
+import fr.vitesse.rh.ui.common.CandidateContactButton
+import fr.vitesse.rh.ui.common.CandidateInformation
 import fr.vitesse.rh.ui.state.CandidateUiState
 import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -63,9 +60,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CandidateScreen(
-    modifier: Modifier = Modifier,
     candidate: Candidate,
-    candidateDetailService: CandidateDetailService,
+    candidateInformationService: CandidateInformationService,
     onBackClick: () -> Unit,
     candidateViewModel: CandidateViewModel,
     onCreateUpdateClick: (Candidate) -> Unit
@@ -97,12 +93,23 @@ fun CandidateScreen(
             )
         },
         content = { padding ->
-            CandidateDetails(
-                modifier = Modifier.padding(padding),
-                candidate = updatedCandidate,
-                candidateDetailService = candidateDetailService,
-                uiState = uiState
-            )
+            Box {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CandidateInformationList(
+                        modifier = Modifier.padding(padding),
+                        candidate = updatedCandidate,
+                        candidateInformationService = candidateInformationService,
+                        uiState = uiState
+                    )
+                }
+            }
         }
     )
 }
@@ -188,10 +195,10 @@ fun CandidateTopBar(
 
 
 @Composable
-fun CandidateDetails(
+fun CandidateInformationList(
     modifier: Modifier,
     candidate: Candidate,
-    candidateDetailService: CandidateDetailService,
+    candidateInformationService: CandidateInformationService,
     uiState: CandidateUiState
 ) {
     val context = LocalContext.current
@@ -205,7 +212,7 @@ fun CandidateDetails(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = candidateDetailService.getDefaultProfilePicture()),
+                painter = painterResource(id = R.drawable.default_candidate),
                 contentDescription = stringResource(R.string.profile_picture_description),
                 modifier = Modifier
                     .height(175.dp)
@@ -223,7 +230,7 @@ fun CandidateDetails(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CircleWithIconAndLabel(
+            CandidateContactButton(
                 icon = Icons.Default.Call,
                 label = stringResource(R.string.phone_description),
                 value = candidate.phoneNumber
@@ -234,7 +241,7 @@ fun CandidateDetails(
                 context.startActivity(intent)
             }
 
-            CircleWithIconAndLabel(
+            CandidateContactButton(
                 icon = Icons.Default.Phone,
                 label = stringResource(R.string.sms_description),
                 value = candidate.phoneNumber
@@ -245,7 +252,7 @@ fun CandidateDetails(
                 context.startActivity(intent)
             }
 
-            CircleWithIconAndLabel(
+            CandidateContactButton(
                 icon = Icons.Default.Email,
                 label = stringResource(R.string.e_mail_description),
                 value = candidate.emailAddress
@@ -259,108 +266,26 @@ fun CandidateDetails(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CandidateInfoCard(
+        CandidateInformation(
             title = stringResource(R.string.about_title),
-            body = candidateDetailService.getFormattedBirthday(candidate, context),
+            body = candidateInformationService.getFormattedBirthday(candidate, context),
             label = stringResource(R.string.about_description)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CandidateInfoCard(
+        CandidateInformation(
             title = stringResource(R.string.salary_expectations_title),
-            body = candidateDetailService.getSalaryExpectation(candidate),
-            label = "USD: " + uiState.convertedUsdSalary
+            body = candidateInformationService.getSalaryExpectation(candidate),
+            label = "soit " + uiState.convertedGbpSalary
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CandidateInfoCard(
+        CandidateInformation(
             title = stringResource(R.string.notes_title),
             body = candidate.note,
             label = ""
-        )
-    }
-}
-
-
-
-
-@Composable
-fun CandidateInfoCard(
-    modifier: Modifier = Modifier,
-    title: String,
-    body: String,
-    label: String
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(32.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onTertiary
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = body,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onTertiary
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
-        }
-    }
-}
-
-@Composable
-fun CircleWithIconAndLabel(
-    icon: ImageVector,
-    label: String,
-    value: String,
-    onClick: (String) -> Unit
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .padding(8.dp)
-            .size(70.dp)
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable { onClick(value) }
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onTertiary
         )
     }
 }

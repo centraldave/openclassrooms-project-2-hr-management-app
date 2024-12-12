@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CandidateDao {
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertCandidate(candidate: Candidate)
 

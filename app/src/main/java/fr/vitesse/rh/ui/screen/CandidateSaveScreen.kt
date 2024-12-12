@@ -49,7 +49,7 @@ import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateUpdateScreen(
+fun CreateSaveScreen(
     modifier: Modifier = Modifier,
     candidate: Candidate? = null,
     onBackClick: () -> Unit,

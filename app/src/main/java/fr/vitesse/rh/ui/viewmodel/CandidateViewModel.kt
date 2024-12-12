@@ -29,7 +29,7 @@ class CandidateViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-                fetchCandidatesOnInit(14)
+            fetchCandidatesOnInit(14)
         }
     }
 
@@ -50,8 +50,8 @@ class CandidateViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true) }
         val candidates = candidateRepository.getCandidateList().firstOrNull()
         if (candidates.isNullOrEmpty()) {
-        insertRandomCandidateList(candidateListCount)
-            }
+            insertRandomCandidateList(candidateListCount)
+        }
         val candidatesFlow = candidateRepository.getCandidateList()
         candidatesFlow.collect { candidateList ->
             _uiState.update { it.copy(candidateList = candidateList, isLoading = false) }
@@ -72,8 +72,14 @@ class CandidateViewModel @Inject constructor(
     }
 
     suspend fun deleteCandidate(candidate: Candidate, onBackClick: () -> Unit) {
-        candidateRepository.deleteCandidate(candidate)
-        onBackClick()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            candidateRepository.deleteCandidate(candidate)
+
+            withContext(Dispatchers.Main) {
+                onBackClick()
+            }
+        }
     }
 
 
@@ -101,28 +107,18 @@ class CandidateViewModel @Inject constructor(
         val salary = salaryExpectation.toDoubleOrNull()
 
         if (salary != null) {
-            if (_uiState.value.convertedUsdSalary.isNullOrEmpty()
-                || _uiState.value.convertedGbpSalary.isNullOrEmpty()
-                || _uiState.value.convertedJpySalary.isNullOrEmpty()) {
+            if (_uiState.value.convertedGbpSalary.isNullOrEmpty()) {
 
                 viewModelScope.launch {
-                    val randomRateUsd = generateRandomRate(1.05, 1.20)
                     val randomRateGbp = generateRandomRate(0.85, 1.10)
-                    val randomRateJpy = generateRandomRate(130.0, 150.0)
 
-                    val convertedUsd = salary * randomRateUsd
                     val convertedGbp = salary * randomRateGbp
-                    val convertedJpy = salary * randomRateJpy
 
-                    val formattedUsd = "%.2f USD".format(convertedUsd)
-                    val formattedGbp = "%.2f GBP".format(convertedGbp)
-                    val formattedJpy = "%.2f JPY".format(convertedJpy)
+                    val formattedGbp = "%.2f £".format(convertedGbp)
 
                     _uiState.update {
                         it.copy(
-                            convertedUsdSalary = formattedUsd,
-                            convertedGbpSalary = formattedGbp,
-                            convertedJpySalary = formattedJpy
+                            convertedGbpSalary = formattedGbp
                         )
                     }
                 }

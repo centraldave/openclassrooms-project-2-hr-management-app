@@ -21,15 +21,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fr.vitesse.rh.R
 import fr.vitesse.rh.data.model.Candidate
-import fr.vitesse.rh.data.service.CandidateDetailService
+import fr.vitesse.rh.data.service.CandidateInformationService
 
 @Composable
 fun CandidateCell(
-    candidateDetailService: CandidateDetailService,
     candidate: Candidate,
     onCandidateClick: (Candidate) -> Unit,
 ) {
-    val profilePicture: Int = candidateDetailService.getDefaultProfilePicture()
+    val profilePicture: Int = R.drawable.default_candidate
     Row(
         modifier = Modifier
             .clickable {

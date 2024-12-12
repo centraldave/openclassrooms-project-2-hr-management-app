@@ -11,22 +11,22 @@ sealed class Screen(
     data object Home : Screen("home")
 
     data object DetailCandidate : Screen(
-        route = "candidateDetail/{candidateId}",
+        route = "candidate/{candidateId}",
         navArguments = listOf(navArgument("candidateId") {
             type = NavType.StringType
         })
     ) {
-        fun createRoute(candidateId: String): String = "candidateDetail/$candidateId"
+        fun createRoute(candidateId: String): String = "candidate/$candidateId"
     }
 
     data object CreateOrUpdateCandidate : Screen(
-        route = "createOrEditCandidate/{candidateId}",
+        route = "saveCandidate/{candidateId}",
         navArguments = listOf(navArgument("candidateId") {
             type = NavType.StringType
             nullable = true
         })
     ) {
         fun createRoute(candidateId: String?): String =
-            if (candidateId.isNullOrEmpty()) "createOrEditCandidate/" else "createOrEditCandidate/$candidateId"
+            if (candidateId.isNullOrEmpty()) "saveCandidate/" else "saveCandidate/$candidateId"
     }
 }

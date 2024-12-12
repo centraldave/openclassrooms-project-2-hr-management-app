@@ -21,7 +21,17 @@
     <string name="description_button_edit">Edit</string>
     <string name="create_fragment_label">Create</string>
     <string name="contentDescription_go_back">Go back</string>
-    <string name="action_save">Save</string>
+    <string name="action_save">Sauvegarder</string>
+    <string name="action_update">Mettre à jour</string>
     <string name="deletion_title">Suppression</string>
     <string name="deletion_description">Êtes-vous sûr de vouloir supprimer ce candidat ? Cette action est irréversible.</string>
+    <string name="first_name_placeholder">Prénom</string>
+    <string name="last_name_placeholder">Nom</string>
+    <string name="phone_placeholder">Téléphone</string>
+    <string name="email_placeholder">Adresse e-mail</string>
+    <string name="birthdate_placeholder">Date de naissance</string>
+    <string name= "salary_expectation_placeholder">Prétention salariale</string>
+    <string name= "note_placeholder">Notes</string>
+    <string name="birthdate_title">Entrez une date</string>
+    <string name="birthdate_description">Sélectionner une date</string>
 </resources>

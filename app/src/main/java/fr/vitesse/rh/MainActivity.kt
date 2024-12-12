@@ -33,9 +33,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import fr.vitesse.rh.data.service.CandidateDetailService
+import fr.vitesse.rh.data.service.CandidateInformationService
 import fr.vitesse.rh.ui.screen.CandidateScreen
-import fr.vitesse.rh.ui.screen.CreateUpdateScreen
+import fr.vitesse.rh.ui.screen.CreateSaveScreen
 import fr.vitesse.rh.ui.screen.HomeScreen
 import fr.vitesse.rh.ui.screen.Screen
 import fr.vitesse.rh.ui.state.CandidateUiState
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     val candidateViewModel: CandidateViewModel = hiltViewModel()
                     val candidateUiState by candidateViewModel.uiState.collectAsState()
 
-                    val candidateDetailService = CandidateDetailService()
+                    val candidateInformationService = CandidateInformationService()
                     val navHostController = rememberNavController()
 
                     if (candidateUiState.isLoading) {
@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     } else {
                         CandidateNavHost(
                             modifier = Modifier.padding(innerPadding),
-                            candidateDetailService,
+                            candidateInformationService,
                             navHostController,
                             candidateUiState
                         )
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CandidateNavHost(
     modifier: Modifier,
-    candidateDetailService: CandidateDetailService,
+    candidateInformationService: CandidateInformationService,
     navHostController: NavHostController,
     candidateUiState: CandidateUiState,
     candidateViewModel: CandidateViewModel = hiltViewModel()
@@ -89,19 +89,11 @@ fun CandidateNavHost(
             HomeScreen(
                 modifier = modifier,
                 navHostController = navHostController,
-                candidateDetailService = candidateDetailService,
+                candidateInformationService = candidateInformationService,
                 candidateUiState = candidateUiState,
-                onCandidateClick = {
-                    navHostController.navigate(
-                        Screen.DetailCandidate.createRoute(
-                            candidateId = it.id.toString()
-                        )
-                    )
-                },
                 onCreateUpdateClick = {
                     navHostController.navigate(Screen.CreateOrUpdateCandidate.createRoute(null))
-                },
-                candidateViewModel = candidateViewModel
+                }
             )
         }
 
@@ -114,7 +106,7 @@ fun CandidateNavHost(
             if (candidate != null) {
                 CandidateScreen(
                     candidate = candidate,
-                    candidateDetailService = candidateDetailService,
+                    candidateInformationService = candidateInformationService,
                     candidateViewModel = candidateViewModel,
                     onBackClick = { navHostController.navigateUp() },
                     onCreateUpdateClick = {
@@ -137,12 +129,9 @@ fun CandidateNavHost(
                 candidateUiState.candidateList.firstOrNull { it.id.toString() == id }
             }
 
-            CreateUpdateScreen(
+            CreateSaveScreen(
                 candidate = candidate,
                 onBackClick = { navHostController.navigateUp() },
-                onCreateUpdateClick = {
-                    navHostController.navigateUp()
-                },
                 viewModel = candidateViewModel
             )
         }

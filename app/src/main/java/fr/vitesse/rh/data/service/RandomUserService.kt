@@ -42,7 +42,7 @@ class RandomUserService @Inject constructor() {
                     phoneNumber = getRandomPhoneNumber(),
                     emailAddress = getRandomEmailAddress(),
                     salaryExpectations = getRandomSalary(30000.00, 120000.00),
-                    note = LoremIpsum(30).values.joinToString(" "),
+                    note = LoremIpsum(50).values.joinToString(" "),
                     isFavorite = Random.nextBoolean()
                 )
             }
@@ -75,12 +75,12 @@ class RandomUserService @Inject constructor() {
 
 
     private fun getRandomEmailAddress(): String {
-        val domains = listOf("gmail.com", "yahoo.com", "outlook.com", "example.com")
+        val domainExtension = listOf(".com")
         val randomUsernameLength = (5..10).random()
         val username = (1..randomUsernameLength)
             .map { ('a'..'z').random() }
             .joinToString("")
-        val domain = domains.random()
+        val domain =  LoremIpsum(1).values.joinToString("") + domainExtension
 
         return "$username@$domain"
     }

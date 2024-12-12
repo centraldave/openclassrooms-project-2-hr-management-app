@@ -7,11 +7,7 @@ import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
 
-class CandidateDetailService {
-
-    fun getDefaultProfilePicture(): Int {
-        return R.drawable.default_candidate
-    }
+class CandidateInformationService {
 
     fun getFormattedBirthday(candidate: Candidate, context: Context): String {
         val birthDate = candidate.dateOfBirth
