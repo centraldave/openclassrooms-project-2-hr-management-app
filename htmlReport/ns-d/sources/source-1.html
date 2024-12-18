@@ -1,0 +1,100 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CandidateRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.vitesse.rh.data.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: CandidateRepository (fr.vitesse.rh.data.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">CandidateRepository$Subclass0</td>
+  </tr>
+  <tr>
+    <td class="name">CandidateRepository$Subclass0$auxiliary$INxKKds8</td>
+  </tr>
+  <tr>
+    <td class="name">CandidateRepository$Subclass0$auxiliary$OByog7p1</td>
+  </tr>
+  <tr>
+    <td class="name">CandidateRepository$Subclass0$auxiliary$V7E29yz5</td>
+  </tr>
+  <tr>
+    <td class="name">CandidateRepository$Subclass0$auxiliary$XHgkBBcJ</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.vitesse.rh.data.repository
+&nbsp;
+&nbsp;import fr.vitesse.rh.data.model.Candidate
+&nbsp;import kotlinx.coroutines.flow.Flow
+&nbsp;
+&nbsp;interface CandidateRepository {
+&nbsp;
+&nbsp;    fun getCandidate(id: Long): Flow&lt;Candidate?&gt;
+&nbsp;
+&nbsp;    fun getCandidateList(): Flow&lt;List&lt;Candidate&gt;&gt;
+&nbsp;
+&nbsp;    suspend fun insertCandidate(candidate: Candidate)
+&nbsp;
+&nbsp;    suspend fun updateCandidate(candidate: Candidate)
+&nbsp;
+&nbsp;    suspend fun deleteCandidate(candidate: Candidate)
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-17 20:40</div>
+</div>
+</body>
+</html>

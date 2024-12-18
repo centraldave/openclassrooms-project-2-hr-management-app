@@ -1,0 +1,152 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > RoomModule_ProvideCandidateRepositoryFactory</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.vitesse.rh.data.common</a>
+</div>
+
+<h1>Coverage Summary for Class: RoomModule_ProvideCandidateRepositoryFactory (fr.vitesse.rh.data.common)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoomModule_ProvideCandidateRepositoryFactory</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.vitesse.rh.data.common;
+&nbsp;
+&nbsp;import dagger.internal.DaggerGenerated;
+&nbsp;import dagger.internal.Factory;
+&nbsp;import dagger.internal.Preconditions;
+&nbsp;import dagger.internal.QualifierMetadata;
+&nbsp;import dagger.internal.ScopeMetadata;
+&nbsp;import fr.vitesse.rh.data.dao.CandidateDao;
+&nbsp;import fr.vitesse.rh.data.repository.CandidateRepository;
+&nbsp;import javax.annotation.processing.Generated;
+&nbsp;import javax.inject.Provider;
+&nbsp;
+&nbsp;@ScopeMetadata(&quot;javax.inject.Singleton&quot;)
+&nbsp;@QualifierMetadata
+&nbsp;@DaggerGenerated
+&nbsp;@Generated(
+&nbsp;    value = &quot;dagger.internal.codegen.ComponentProcessor&quot;,
+&nbsp;    comments = &quot;https://dagger.dev&quot;
+&nbsp;)
+&nbsp;@SuppressWarnings({
+&nbsp;    &quot;unchecked&quot;,
+&nbsp;    &quot;rawtypes&quot;,
+&nbsp;    &quot;KotlinInternal&quot;,
+&nbsp;    &quot;KotlinInternalInJava&quot;,
+&nbsp;    &quot;cast&quot;,
+&nbsp;    &quot;deprecation&quot;
+&nbsp;})
+&nbsp;public final class RoomModule_ProvideCandidateRepositoryFactory implements Factory&lt;CandidateRepository&gt; {
+&nbsp;  private final Provider&lt;CandidateDao&gt; candidateDaoProvider;
+&nbsp;
+<b class="nc">&nbsp;  public RoomModule_ProvideCandidateRepositoryFactory(Provider&lt;CandidateDao&gt; candidateDaoProvider) {</b>
+<b class="nc">&nbsp;    this.candidateDaoProvider = candidateDaoProvider;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public CandidateRepository get() {
+<b class="nc">&nbsp;    return provideCandidateRepository(candidateDaoProvider.get());</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public static RoomModule_ProvideCandidateRepositoryFactory create(
+&nbsp;      Provider&lt;CandidateDao&gt; candidateDaoProvider) {
+<b class="nc">&nbsp;    return new RoomModule_ProvideCandidateRepositoryFactory(candidateDaoProvider);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public static CandidateRepository provideCandidateRepository(CandidateDao candidateDao) {
+<b class="nc">&nbsp;    return Preconditions.checkNotNullFromProvides(RoomModule.INSTANCE.provideCandidateRepository(candidateDao));</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-17 20:40</div>
+</div>
+</body>
+</html>

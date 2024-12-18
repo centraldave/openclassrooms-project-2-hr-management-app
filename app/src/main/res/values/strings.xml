@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Vitesse RH</string>
+    <string name="no_favorite">No favorite candidate</string>
+    <string name="all_tab">All</string>
+    <string name="favorite_tab">Favorite</string>
+    <string name="profile_picture_description">Profile picture</string>
+    <string name="search_placeholder">Search candidates...</string>
+    <string name="no_data">No registered candidate</string>
+    <string name="logo_hr_description">Vitesse HR Logo</string>
+    <string name="loader_description">Loading candidates...</string>
+    <string name="phone_description">Phone</string>
+    <string name="sms_description">SMS</string>
+    <string name="e_mail_description">E-Mail</string>
+    <string name="about_title">About Candidate</string>
+    <string name="about_description">Birthday</string>
+    <string name="birthdate_sufix">years old</string>
+    <string name="salary_expectations_title">Salary Expectations</string>
+    <string name="notes_title">Notes</string>
+    <string name="description_button_add">Add</string>
+    <string name="description_button_edit">Edit</string>
+    <string name="create_fragment_label">Create</string>
+    <string name="contentDescription_go_back">Go back</string>
+    <string name="action_save">Save</string>
+    <string name="action_update">Update</string>
+    <string name="deletion_title">Delete</string>
+    <string name="deletion_description">Are you sure you want to delete this candidate? This action cannot be undone.</string>
+    <string name="first_name_placeholder">First name</string>
+    <string name="last_name_placeholder">Last name</string>
+    <string name="phone_placeholder">Phone</string>
+    <string name="email_placeholder">Mail</string>
+    <string name="birthdate_placeholder">Birthdate</string>
+    <string name= "salary_expectation_placeholder">Salary expectation</string>
+    <string name= "note_placeholder">Notes</string>
+    <string name="birthdate_title">Enter a date</string>
+    <string name="birthdate_description">Select a date</string>
+</resources>

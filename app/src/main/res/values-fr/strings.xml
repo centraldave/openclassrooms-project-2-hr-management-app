@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vitesse RH</string>
+    <string name="no_favorite">Aucun candidat favori</string>
+    <string name="all_tab">Tous les candidats</string>
+    <string name="favorite_tab">Favoris</string>
+    <string name="profile_picture_description">Photo de profil</string>
+    <string name="search_placeholder">Rechercher un candidat...</string>
+    <string name="no_data">Aucun candidat enregistré</string>
+    <string name="logo_hr_description">Vitesse HR Logo</string>
+    <string name="loader_description">Chargement des candidats...</string>
+    <string name="phone_description">Téléphone</string>
+    <string name="sms_description">SMS</string>
+    <string name="e_mail_description">E-Mail</string>
+    <string name="about_title">À propos</string>
+    <string name="about_description">Anniversaire</string>
+    <string name="birthdate_sufix">ans</string>
+    <string name="salary_expectations_title">Prétentions salariales</string>
+    <string name="notes_title">Notes</string>
+    <string name="description_button_add">Add</string>
+    <string name="description_button_edit">Edit</string>
+    <string name="create_fragment_label">Create</string>
+    <string name="contentDescription_go_back">Go back</string>
+    <string name="action_save">Sauvegarder</string>
+    <string name="action_update">Mettre à jour</string>
+    <string name="deletion_title">Suppression</string>
+    <string name="deletion_description">Êtes-vous sûr de vouloir supprimer ce candidat ? Cette action est irréversible.</string>
+    <string name="first_name_placeholder">Prénom</string>
+    <string name="last_name_placeholder">Nom</string>
+    <string name="phone_placeholder">Téléphone</string>
+    <string name="email_placeholder">Adresse e-mail</string>
+    <string name="birthdate_placeholder">Date de naissance</string>
+    <string name= "salary_expectation_placeholder">Prétention salariale</string>
+    <string name= "note_placeholder">Notes</string>
+    <string name="birthdate_title">Entrez une date</string>
+    <string name="birthdate_description">Sélectionner une date</string>
+</resources>
