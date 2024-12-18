@@ -5,59 +5,27 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.vitesse.rh.data.model.Candidate
 import fr.vitesse.rh.data.repository.CandidateRepository
-import fr.vitesse.rh.data.service.RandomUserService
 import fr.vitesse.rh.ui.state.CandidateUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class CandidateViewModel @Inject constructor(
     private val candidateRepository: CandidateRepository,
-//    private val randomUserService: RandomUserService,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CandidateUiState())
     val uiState: StateFlow<CandidateUiState> = _uiState.asStateFlow()
 
     init {
-//        viewModelScope.launch {
-//            fetchCandidatesOnInit(14)
-//        }
         updateCandidateList()
     }
-
-//    suspend fun insertRandomCandidateList(candidateListCount: Int) {
-//        withContext(Dispatchers.IO) {
-//            repeat(candidateListCount) {
-//                val candidate: Candidate? = randomUserService.fetchCandidate().getOrNull()
-//                if (candidate != null) {
-//                    candidateRepository.insertCandidate(candidate)
-//                }
-//            }
-//        }
-//        updateCandidateList()
-//        _uiState.update { it.copy(isLoading = false) }
-//    }
-//
-//    private suspend fun fetchCandidatesOnInit(candidateListCount: Int) {
-//        _uiState.update { it.copy(isLoading = true) }
-//        val candidates = candidateRepository.getCandidateList().firstOrNull()
-//        if (candidates.isNullOrEmpty()) {
-//            insertRandomCandidateList(candidateListCount)
-//        }
-//        val candidatesFlow = candidateRepository.getCandidateList()
-//        candidatesFlow.collect { candidateList ->
-//            _uiState.update { it.copy(candidateList = candidateList, isLoading = false) }
-//        }
-//    }
 
     fun toggleFavorite(candidate: Candidate) {
         _uiState.update { currentState ->
@@ -104,14 +72,16 @@ class CandidateViewModel @Inject constructor(
         }
     }
 
+
     fun getConvertedCurrencies(salaryExpectation: String) {
         val salary = salaryExpectation.toDoubleOrNull()
+        val randomRate = 1.1
 
         if (salary != null) {
             if (_uiState.value.convertedGbpSalary.isNullOrEmpty()) {
 
                 viewModelScope.launch {
-                    val randomRateGbp = generateRandomRate(0.85, 1.10)
+                    val randomRateGbp = 0.85 *randomRate
 
                     val convertedGbp = salary * randomRateGbp
 
@@ -129,10 +99,6 @@ class CandidateViewModel @Inject constructor(
         }
     }
 
-
-    private fun generateRandomRate(min: Double, max: Double): Double {
-        return Random.nextDouble (min, max)
-    }
 
     fun updateCandidateList() {
         viewModelScope.launch {

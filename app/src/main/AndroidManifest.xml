@@ -20,7 +20,7 @@
         android:theme="@style/Theme.VitesseRH"
         android:enableOnBackInvokedCallback="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".CandidateActivity"
             android:exported="true"
             android:theme="@style/Theme.VitesseRH">
             <intent-filter>

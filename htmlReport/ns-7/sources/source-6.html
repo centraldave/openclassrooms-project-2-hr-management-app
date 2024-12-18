@@ -1,0 +1,272 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CandidateSearchbarKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.vitesse.rh.ui.common</a>
+</div>
+
+<h1>Coverage Summary for Class: CandidateSearchbarKt (fr.vitesse.rh.ui.common)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CandidateSearchbarKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CandidateSearchbarKt$CandidateSearchbar$1$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">CandidateSearchbarKt$CandidateSearchbar$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">CandidateSearchbarKt$CandidateSearchbar$2$1$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">CandidateSearchbarKt$CandidateSearchbar$3</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/28)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.vitesse.rh.ui.common
+&nbsp;
+&nbsp;import androidx.compose.foundation.layout.fillMaxWidth
+&nbsp;import androidx.compose.foundation.layout.height
+&nbsp;import androidx.compose.foundation.layout.padding
+&nbsp;import androidx.compose.foundation.shape.RoundedCornerShape
+&nbsp;import androidx.compose.material.icons.Icons
+&nbsp;import androidx.compose.material.icons.filled.Clear
+&nbsp;import androidx.compose.material.icons.filled.Search
+&nbsp;import androidx.compose.material3.Icon
+&nbsp;import androidx.compose.material3.IconButton
+&nbsp;import androidx.compose.material3.MaterialTheme
+&nbsp;import androidx.compose.material3.Text
+&nbsp;import androidx.compose.material3.TextField
+&nbsp;import androidx.compose.material3.TextFieldDefaults
+&nbsp;import androidx.compose.runtime.Composable
+&nbsp;import androidx.compose.runtime.MutableState
+&nbsp;import androidx.compose.ui.Modifier
+&nbsp;import androidx.compose.ui.draw.clip
+&nbsp;import androidx.compose.ui.graphics.Color
+&nbsp;import androidx.compose.ui.res.stringResource
+&nbsp;import androidx.compose.ui.unit.dp
+&nbsp;import fr.vitesse.rh.R
+&nbsp;
+&nbsp;@Composable
+<b class="nc">&nbsp;fun CandidateSearchbar(searchQuery: MutableState&lt;String&gt;) {</b>
+<b class="nc">&nbsp;    TextField(</b>
+<b class="nc">&nbsp;        value = searchQuery.value,</b>
+<b class="nc">&nbsp;        onValueChange = { newQuery -&gt; searchQuery.value = newQuery },</b>
+<b class="nc">&nbsp;        modifier = Modifier</b>
+<b class="nc">&nbsp;            .fillMaxWidth()</b>
+<b class="nc">&nbsp;            .padding(horizontal = 16.dp)</b>
+<b class="nc">&nbsp;            .height(56.dp)</b>
+<b class="nc">&nbsp;            .clip(RoundedCornerShape(12.dp)),</b>
+<b class="nc">&nbsp;        textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),</b>
+&nbsp;        placeholder = {
+&nbsp;            Text(
+&nbsp;                text = stringResource(R.string.search_placeholder),
+&nbsp;                style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray)
+&nbsp;            )
+&nbsp;        },
+&nbsp;        leadingIcon = {
+&nbsp;            Icon(
+&nbsp;                imageVector = Icons.Filled.Search,
+&nbsp;                contentDescription = &quot;Search icon&quot;,
+&nbsp;                tint = Color.Gray
+&nbsp;            )
+&nbsp;        },
+<b class="nc">&nbsp;        trailingIcon = {</b>
+<b class="nc">&nbsp;            if (searchQuery.value.isNotEmpty()) {</b>
+<b class="nc">&nbsp;                IconButton(onClick = { searchQuery.value = &quot;&quot; }) {</b>
+&nbsp;                    Icon(
+&nbsp;                        imageVector = Icons.Filled.Clear,
+&nbsp;                        contentDescription = &quot;Clear search&quot;,
+&nbsp;                        tint = Color.Gray
+&nbsp;                    )
+&nbsp;                }
+<b class="nc">&nbsp;            }</b>
+&nbsp;        },
+<b class="nc">&nbsp;        singleLine = true,</b>
+<b class="nc">&nbsp;        shape = RoundedCornerShape(12.dp),</b>
+<b class="nc">&nbsp;        colors = TextFieldDefaults.colors(</b>
+<b class="nc">&nbsp;            focusedIndicatorColor = MaterialTheme.colorScheme.primary,</b>
+<b class="nc">&nbsp;            unfocusedIndicatorColor = Color.Transparent,</b>
+<b class="nc">&nbsp;            disabledIndicatorColor = Color.Transparent,</b>
+<b class="nc">&nbsp;            errorIndicatorColor = MaterialTheme.colorScheme.error,</b>
+<b class="nc">&nbsp;            focusedContainerColor = Color.Transparent,</b>
+<b class="nc">&nbsp;            unfocusedContainerColor = Color.Transparent,</b>
+<b class="nc">&nbsp;            disabledContainerColor = Color.Transparent,</b>
+<b class="nc">&nbsp;            errorContainerColor = Color.Transparent</b>
+&nbsp;        )
+&nbsp;    )
+<b class="nc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-17 20:40</div>
+</div>
+</body>
+</html>

@@ -10,6 +10,7 @@ android {
     namespace = "fr.vitesse.rh"
     compileSdk = 35
 
+
     defaultConfig {
         applicationId = "fr.vitesse.rh"
         minSdk = 35
@@ -60,6 +61,10 @@ android {
 }
 
 dependencies {
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
     implementation("io.coil-kt:coil-compose:2.0.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
@@ -70,16 +75,12 @@ dependencies {
 
     implementation("androidx.room:room-runtime:2.5.0")
     implementation(libs.hilt.android.testing)
+    implementation(libs.androidx.runner)
     kapt("androidx.room:room-compiler:2.5.0")
     implementation("androidx.room:room-ktx:2.5.0")
 
-    implementation("com.google.dagger:hilt-android:2.52")
-    kapt("com.google.dagger:hilt-compiler:2.52")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
-    kaptAndroidTest("com.google.dagger:hilt-compiler:2.52")
-    kaptTest("com.google.dagger:hilt-compiler:2.52")
     testImplementation("com.google.truth:truth:1.4.4")
     androidTestImplementation("com.google.truth:truth:1.4.4")
 
@@ -88,26 +89,28 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test:core:1.5.0")
 
-    implementation("org.mockito:mockito-core:4.0.0")
     implementation("org.mockito:mockito-inline:4.0.0")
     testImplementation("io.mockk:mockk:1.13.3")
 
-    // Hilt dependencies for testing
-    implementation("androidx.arch.core:core-testing:2.1.0")
-    implementation("junit:junit:4.13.2")
-    implementation("org.mockito:mockito-core:4.0.0")
-    implementation("org.mockito:mockito-inline:4.0.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
-    implementation("androidx.compose.ui:ui-test-junit4:1.6.0")  // For Compose testing
-    implementation("androidx.compose.ui:ui-test-manifest:1.6.0") // For Compose test manifest
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.0")  // For coroutines testing
-    testImplementation("io.mockk:mockk:1.13.5") // Latest version as of now
-    androidTestImplementation("io.mockk:mockk-android:1.13.5")
+    // Hilt dependencies
+    testImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.51.1")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation("com.google.dagger:hilt-android:2.52")
+    kapt("com.google.dagger:hilt-compiler:2.52")
 
 
 
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.activity:activity-testing:1.7.0")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+
+    testImplementation("org.mockito:mockito-core:3.12.4")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
     implementation(libs.androidx.core.ktx)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
@@ -128,25 +131,4 @@ jacoco {
     toolVersion = "0.8.7"
 }
 
-tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn(tasks.named("testDebugUnitTest"))
 
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
-
-    val fileFilter = listOf(
-        "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*", "**/*Test*.*"
-    )
-    val debugTree = fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/debug")) {
-        exclude(fileFilter)
-    }
-    val mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.setFrom(files(listOf(mainSrc)))
-    classDirectories.setFrom(files(listOf(debugTree)))
-    executionData.setFrom(fileTree(layout.buildDirectory.dir("jacoco")) {
-        include("testDebugUnitTest.exec")
-    })
-}

@@ -49,8 +49,12 @@ import fr.vitesse.rh.data.model.Candidate
 import fr.vitesse.rh.ui.common.BirthdateField
 import fr.vitesse.rh.ui.common.CandidateField
 import fr.vitesse.rh.ui.viewmodel.CandidateViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
 fun CreateSaveScreen(
     modifier: Modifier = Modifier,
