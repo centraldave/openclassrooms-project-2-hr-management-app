@@ -29,7 +29,7 @@ class CandidateInformationServiceUnitTest {
             isFavorite = false
         )
     }
-    
+
     @Test
     fun `test getSalaryExpectation returns formatted salary expectation`() {
         // given
