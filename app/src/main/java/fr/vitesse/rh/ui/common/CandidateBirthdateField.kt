@@ -143,6 +143,7 @@ fun DatePickerDialog(onDateSelected: (String) -> Unit) {
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
+    val currentDateMillis = calendar.timeInMillis
 
     val datePickerDialog = android.app.DatePickerDialog(
         context,
@@ -161,6 +162,8 @@ fun DatePickerDialog(onDateSelected: (String) -> Unit) {
         },
         year, month, day
     )
+
+    datePickerDialog.datePicker.maxDate = currentDateMillis
 
     LaunchedEffect(context) {
         datePickerDialog.show()
