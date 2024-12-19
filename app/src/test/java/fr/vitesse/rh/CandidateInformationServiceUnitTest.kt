@@ -29,16 +29,7 @@ class CandidateInformationServiceUnitTest {
             isFavorite = false
         )
     }
-
-    @Test
-    fun `test getSalaryExpectation returns correct salary expectation`() {
-        // given
-        // when
-        val result = candidateInformationService.getSalaryExpectation(candidate)
-        // then
-        assertEquals("50000.00 €", result)
-    }
-
+    
     @Test
     fun `test getSalaryExpectation returns formatted salary expectation`() {
         // given
