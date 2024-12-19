@@ -24,7 +24,7 @@ class CandidateViewModel @Inject constructor(
     val uiState: StateFlow<CandidateUiState> = _uiState.asStateFlow()
 
     init {
-        updateCandidateList()
+        getCandidateList()
     }
 
     fun toggleFavorite(candidate: Candidate) {
@@ -100,7 +100,7 @@ class CandidateViewModel @Inject constructor(
     }
 
 
-    fun updateCandidateList() {
+    fun getCandidateList() {
         viewModelScope.launch {
             val candidatesFlow = candidateRepository.getCandidateList()
             candidatesFlow.collect { candidateList ->
